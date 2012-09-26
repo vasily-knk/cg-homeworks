@@ -1,9 +1,8 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
+out/*
+data/*
+ipch/*
+*.sdf
+*.suo
+*.opensdf
 
-# Project property files
-.actionScriptProperties
-.flexProperties
-.settings/
-.project
+*.user
