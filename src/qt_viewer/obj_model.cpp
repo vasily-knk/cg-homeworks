@@ -18,14 +18,16 @@ obj_model::obj_model(std::istream &stream)
 
 void obj_model::load(const string &filename)
 {
-    ifstream stream(filename);
+    ifstream stream;
+    stream.exceptions(ifstream::badbit);
+    stream.open(filename);
     load(stream);
 }
 
 void obj_model::load(std::istream &stream)
 {
     verts_.clear();
-    faces_.clear();
+    indices_.clear();
 
     string str;
     while (std::getline(stream, str))
@@ -65,14 +67,19 @@ void obj_model::parse_face(const string &str)
     vector<string> blocks;
     boost::split(blocks, str, boost::is_space(), boost::token_compress_on);
 
-    face_t face;
+    int counter = 0;
+    
     BOOST_FOREACH(const string &block, blocks)
     {
         vector<string> numbers;
         boost::split(numbers, block, is_slash);
 
-        int vert = boost::lexical_cast<int>(numbers.front());
-        face.verts.push_back(vert);
-        faces_.push_back(face);
+        index_t index = boost::lexical_cast<index_t>(numbers.front());
+        indices_.push_back(index - 1);
+
+        ++counter;
     }
+
+    if (counter != 3)
+        throw std::runtime_error("Only faces with 3 vertices are supported");
 }

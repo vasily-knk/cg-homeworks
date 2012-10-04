@@ -3,28 +3,36 @@
 
 qt_viewer::qt_viewer(QWidget *parent)
     : QGLWidget(parent)
-    , model_("model.obj")
 {
 }
 
 qt_viewer::~qt_viewer()
 {
-
+    glDeleteBuffers(1, &indices_id_);
+    glDeleteBuffers(1, &verts_id_);
 }
 
 void qt_viewer::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
+    //drawModel();
 }
 
 void qt_viewer::initializeGL()
 {
+    initializeGLFunctions();
+
     glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+    glClearColor(0.0f, 0.0f, 1.0f, 0.5f);				// Black Background
     glClearDepth(1.0f);									// Depth Buffer Setup
     glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
     glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+
+    glEnableClientState(GL_VERTEX_ARRAY);						// Enable Vertex Arrays
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    loadModel();
 }
 
 void qt_viewer::resizeGL(const int width, const int height)
@@ -39,4 +47,33 @@ void qt_viewer::resizeGL(const int width, const int height)
 
     glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
     glLoadIdentity();									// Reset The Modelview Matrix}
+    glTranslatef(0.0f,0.0f,-10.0f);
+}
+
+void qt_viewer::loadModel()
+{
+    model_.load("model.obj");
+    uploadModel();
+}
+
+void qt_viewer::drawModel()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, verts_id_);
+    glVertexPointer(3, GL_FLOAT, 0, NULL);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_id_);
+    glDrawElements(GL_TRIANGLES, model_.get_indices().size(), GL_UNSIGNED_INT, NULL);
+}
+
+void qt_viewer::uploadModel()
+{
+    //glGenBuffers(1, &verts_id_);
+    //glBindBuffer(GL_ARRAY_BUFFER, verts_id_);
+    //glBufferData(GL_ARRAY_BUFFER, model_.get_verts().size() * sizeof(vec3_t), &(model_.get_verts()[0]), GL_STATIC_DRAW);
+
+/*    glGenBuffers(1, &indices_id_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_id_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, model_.get_indices().size() * sizeof(obj_model::index_t), &(model_.get_indices()[0]), GL_STATIC_DRAW);
+*/
+
+    setWindowTitle("Done.");
 }
