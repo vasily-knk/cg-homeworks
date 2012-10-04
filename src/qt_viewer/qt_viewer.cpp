@@ -3,6 +3,7 @@
 
 qt_viewer::qt_viewer(QWidget *parent)
     : QGLWidget(parent)
+    , model_loaded_(false)
 {
 }
 
@@ -15,7 +16,9 @@ qt_viewer::~qt_viewer()
 void qt_viewer::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-    drawModel();
+    
+    if (model_loaded_)
+        drawModel();
 }
 
 void qt_viewer::initializeGL()
@@ -32,7 +35,12 @@ void qt_viewer::initializeGL()
     glEnableClientState(GL_VERTEX_ARRAY);						// Enable Vertex Arrays
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    loadModel();
+    connect(&model_loader_watcher_, SIGNAL(finished()), this, SLOT(modelLoaded()));
+    
+    model_loader_ = QtConcurrent::run(this, &qt_viewer::loadModel);
+    model_loader_watcher_.setFuture(model_loader_);
+
+    setWindowTitle("Loading...");
 }
 
 void qt_viewer::resizeGL(const int width, const int height)
@@ -53,7 +61,6 @@ void qt_viewer::resizeGL(const int width, const int height)
 void qt_viewer::loadModel()
 {
     model_.load("model.obj");
-    uploadModel();
 }
 
 void qt_viewer::drawModel()
@@ -75,4 +82,11 @@ void qt_viewer::uploadModel()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, model_.get_indices().size() * sizeof(obj_model::index_t), &(model_.get_indices()[0]), GL_STATIC_DRAW);
 
     setWindowTitle("Done.");
+    model_loaded_ = true;
+    update();
+}
+
+void qt_viewer::modelLoaded()
+{
+    uploadModel();
 }
