@@ -3,7 +3,7 @@
 
 #include "obj_model.h"
 
-class qt_viewer : public QGLWidget, protected QGLFunctions
+class qt_viewer : public QGLWidget/*, protected QGLFunctions*/
 {
     Q_OBJECT
 

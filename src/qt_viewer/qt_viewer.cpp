@@ -15,12 +15,12 @@ qt_viewer::~qt_viewer()
 void qt_viewer::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-    //drawModel();
+    drawModel();
 }
 
 void qt_viewer::initializeGL()
 {
-    initializeGLFunctions();
+    glewInit();
 
     glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
     glClearColor(0.0f, 0.0f, 1.0f, 0.5f);				// Black Background
@@ -66,14 +66,13 @@ void qt_viewer::drawModel()
 
 void qt_viewer::uploadModel()
 {
-    //glGenBuffers(1, &verts_id_);
-    //glBindBuffer(GL_ARRAY_BUFFER, verts_id_);
-    //glBufferData(GL_ARRAY_BUFFER, model_.get_verts().size() * sizeof(vec3_t), &(model_.get_verts()[0]), GL_STATIC_DRAW);
+    glGenBuffers(1, &verts_id_);
+    glBindBuffer(GL_ARRAY_BUFFER, verts_id_);
+    glBufferData(GL_ARRAY_BUFFER, model_.get_verts().size() * sizeof(vec3_t), &(model_.get_verts()[0]), GL_STATIC_DRAW);
 
-/*    glGenBuffers(1, &indices_id_);
+    glGenBuffers(1, &indices_id_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_id_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, model_.get_indices().size() * sizeof(obj_model::index_t), &(model_.get_indices()[0]), GL_STATIC_DRAW);
-*/
 
     setWindowTitle("Done.");
 }

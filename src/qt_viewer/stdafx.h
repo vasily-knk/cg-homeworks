@@ -22,5 +22,6 @@ using std::vector;
 
 #include <QtGui/QtGui>
 
-#include <QtOpenGL/QtOpenGL>
-#include <GL/GLU.h>
+#include <GL/glew.h>
+#include <QtOpenGL/QGLWidget>
+//#include <GL/GLU.h>
