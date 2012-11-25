@@ -1,7 +1,7 @@
 #ifndef QT_VIEWER_H
 #define QT_VIEWER_H
 
-#include "obj_model.h"
+#include "model.h"
 
 class qt_viewer : public QGLWidget/*, protected QGLFunctions*/
 {
@@ -31,7 +31,7 @@ private:
     };
 
 private:
-    obj_model model_;
+    model model_;
     GLuint verts_id_, indices_id_;
     QFuture<void> model_loader_;
     QFutureWatcher<void> model_loader_watcher_;

@@ -1,30 +1,15 @@
 #include "stdafx.h"
-#include "obj_model.h"
+#include "model.h"
 
-obj_model::obj_model()
-{
-
-}
-
-obj_model::obj_model(const string &filename)
-{
-    load(filename);
-}
-
-obj_model::obj_model(std::istream &stream)
-{
-    load(stream);
-}
-
-void obj_model::load(const string &filename)
+void model::load_obj(const string &filename)
 {
     ifstream stream;
     stream.exceptions(ifstream::badbit);
     stream.open(filename);
-    load(stream);
+    load_obj(stream);
 }
 
-void obj_model::load(std::istream &stream)
+void model::load_obj(std::istream &stream)
 {
     verts_.clear();
     indices_.clear();
@@ -46,7 +31,7 @@ void obj_model::load(std::istream &stream)
     }
 }
 
-void obj_model::parse_vertex(const string &str)
+void model::parse_vertex(const string &str)
 {
     vec3_t vert;
     std::stringstream ss(str);
@@ -62,13 +47,13 @@ namespace
     }
 }
 
-void obj_model::parse_face(const string &str)
+void model::parse_face(const string &str)
 {
     vector<string> blocks;
     boost::split(blocks, str, boost::is_space(), boost::token_compress_on);
 
     int counter = 0;
-    
+
     BOOST_FOREACH(const string &block, blocks)
     {
         vector<string> numbers;

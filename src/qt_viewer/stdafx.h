@@ -20,8 +20,12 @@ using std::vector;
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
+//#include <GL/GLU.h>
 #include <QtGui/QtGui>
 
+#define QT_OPENGL_LIB
+
 #include <GL/glew.h>
-#include <QtOpenGL/QGLWidget>
-//#include <GL/GLU.h>
+#include <QtOpenGL/qgl.h>
+//#include "gl/GLU.h"
+

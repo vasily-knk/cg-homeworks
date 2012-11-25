@@ -31,6 +31,7 @@ void qt_viewer::initializeGL()
     glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
     glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+    glEnable(GL_CULL_FACE);
 
     glEnableClientState(GL_VERTEX_ARRAY);						// Enable Vertex Arrays
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -55,12 +56,14 @@ void qt_viewer::resizeGL(const int width, const int height)
 
     glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
     glLoadIdentity();									// Reset The Modelview Matrix}
-    glTranslatef(0.0f,0.0f,-10.0f);
+    glTranslatef(0.0f, 0.0f, -10.0f);
 }
 
 void qt_viewer::loadModel()
 {
-    model_.load("model.obj");
+    //model_.load_obj("model.obj");
+    model_.load_sphere(2, 32);
+    //model_.load_triangle();
 }
 
 void qt_viewer::drawModel()
@@ -79,7 +82,7 @@ void qt_viewer::uploadModel()
 
     glGenBuffers(1, &indices_id_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_id_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, model_.get_indices().size() * sizeof(obj_model::index_t), &(model_.get_indices()[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, model_.get_indices().size() * sizeof(model::index_t), &(model_.get_indices()[0]), GL_STATIC_DRAW);
 
     setWindowTitle("Done.");
     model_loaded_ = true;
